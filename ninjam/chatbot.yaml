@@ -1,0 +1,29 @@
+app_name: ninjam-chatbot
+log_file: stdout
+log_level: debug
+daemon: false
+ignore_users:
+ - dj
+ - njcast
+ignore_prefix:
+ - dj
+servers:
+- server:
+  host: HOSTNAME
+  port: 2051
+  anonymous: false
+  user_name: chatbot
+  user_password: CHANGEPASSWORD
+- server:
+  host: HOSTNAME
+  port: 2050
+  anonymous: false
+  user_name: chatbot
+  user_password: CHANGEPASSWORD
+telegram:
+  token: TELEGRAM_TOKEN
+  chat_id: -1111111111111111
+slack:
+  bot_name: jambot
+  token: SLACK_TOKEN
+  channel: general

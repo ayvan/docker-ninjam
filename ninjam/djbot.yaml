@@ -1,0 +1,14 @@
+app_name: ninjam-dj-bot
+log_file: stdout
+log_level: debug
+daemon: false
+server:
+  host: HOSTNAME
+  port: 2051
+  anonymous: false
+  user_name: dj
+  user_password: CHANGEPASSWORD
+player:
+  dir: /home/dj/tracks/
+  command: /usr/bin/mpg321
+  args: -o pulse

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<playlist version="1" xmlns="http://xspf.org/xspf-v0.html">
+<trackList>
+
+<track>
+<creator>Gitarizm 2050</creator>
+<title>Gitarizm 2050</title>
+<!--image>http://ninjamer.com/include/livemusic.gif</image-->
+<location>http://guitar-jam.ru:8000/2050</location>
+</track>
+
+<track>
+
+<title>Gitarizm 2051</title>
+<creator>Gitarizm 2051</creator>
+<!--image>http://ninjamer.com/include/livemusic.gif</image-->
+<location>http://guitar-jam.ru:8000/2051</location>
+</track>
+
+</trackList>
+</playlist>
