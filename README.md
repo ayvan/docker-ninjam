@@ -1,4 +1,4 @@
-#Dockerfile and configs for ninjam server
+# Dockerfile and configs for ninjam server
 
 ## How to start
 
