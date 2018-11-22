@@ -109,7 +109,7 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-md-6 mb-4 col-sm-12 col-xs-12 alert alert-dark">
-            <table class="tborder" cellpadding="6" cellspacing="1" border="0" width="300">
+            <table class="tborder" cellpadding="6" cellspacing="1" border="0" width="100%">
                 <tr>
                     <td class="alt1"><b>Сервер <?= $_SERVER['HTTP_HOST'] ?>:2050</b>
                     </td>
@@ -121,14 +121,14 @@
                     <td class="alt1" colspan="2"><b>Слушают в плеере:</b>&nbsp;<span id="l1"></span></td>
                 </tr>
                 <tr>
-                    <td class="alt1" height="100" valign="top" colspan="2">
+                    <td class="alt1" height="80" valign="top" colspan="2">
                         <div id="u1"></div>
                     </td>
                 </tr>
             </table>
         </div>
         <div class="col-md-6 mb-4 col-sm-12 col-xs-12 alert alert-dark">
-            <table class="tborder" cellpadding="6" cellspacing="1" border="0" width="300">
+            <table class="tborder" cellpadding="6" cellspacing="1" border="0" width="100%">
                 <tr>
                     <td class="alt1"><b>Сервер <?= $_SERVER['HTTP_HOST'] ?>:2051</b></td>
                     <td class="alt1"><a
@@ -139,7 +139,7 @@
                     <td class="alt1" colspan="2"><b>Слушают в плеере:</b>&nbsp;<span id="l2"></span></td>
                 </tr>
                 <tr>
-                    <td class="alt1" height="100" valign="top" colspan="2">
+                    <td class="alt1" height="80" valign="top" colspan="2">
                         <div id="u2"></div>
                     </td>
                 </tr>
