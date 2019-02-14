@@ -1,30 +1,43 @@
-FROM golang:1.11-alpine AS build
+FROM ayvan/ubuntu-golang AS build
 
 # Install tools required for project
 # Run `docker build --no-cache .` to update dependencies
-RUN apk add --no-cache git make g++
+RUN apt update && apt install -y git make g++ \
+    libvorbis-dev \
+    sox libsox-fmt-mp3 \
+    x42-plugins calf-plugins liblilv-dev
 
-RUN go get github.com/Ayvan/ninjam-chatbot
-WORKDIR /go/src/github.com/Ayvan/ninjam-chatbot
-RUN go install
+RUN mkdir $GOPATH/src
+RUN mkdir $GOPATH/src/github.com
+RUN mkdir $GOPATH/src/github.com/ayvan
+WORKDIR $GOPATH/src/github.com/ayvan/
+RUN git clone https://github.com/ayvan/ninjam-chatbot.git
+WORKDIR $GOPATH/src/github.com/ayvan/ninjam-chatbot
+RUN git checkout -b dev origin/dev
+RUN go get
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-s -w" -o /bin/ninjam-chatbot
 
-RUN go get github.com/Ayvan/ninjam-dj-bot
-WORKDIR /go/src/github.com/Ayvan/ninjam-dj-bot
-RUN go install
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-s -w" -o /bin/ninjam-dj-bot
+WORKDIR $GOPATH/src/github.com/ayvan/
+RUN git clone https://github.com/ayvan/ninjam-dj-bot.git
+WORKDIR $GOPATH/src/github.com/ayvan/ninjam-dj-bot
+RUN git checkout -b jam-player origin/jam-player
+RUN cp lv2host.yaml /etc/lv2host.yaml
+RUN go get
+RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-s -w" -o /bin/ninjam-dj-bot
 
 # build ninjamsrv
 FROM ubuntu:16.04 as build-ninjamsrv
 
 RUN apt update && \
         apt install -y \
-	git make g++ \
-	lib32ncurses5 lib32ncurses5-dev \
-	libasound2 libasound2-dev \
-	libvorbis-dev libvorbis0a \
-	libvorbisenc2 libogg-dev \
-	libmp3lame-dev libjack-dev
+    git make g++ \
+    lib32ncurses5 lib32ncurses5-dev \
+    libasound2 libasound2-dev \
+    libvorbis-dev libvorbis0a \
+    libvorbisenc2 libogg-dev \
+    libmp3lame-dev libjack-dev \
+    sox libsox-fmt-mp3 \
+    x42-plugins calf-plugins liblilv-dev
 
 WORKDIR /
 
@@ -55,13 +68,15 @@ FROM justckr/ubuntu-nginx-php:latest
 MAINTAINER Ivan Korostelev <ajvan.ivan@gmail.com>
 
 RUN apt update && \
-	apt install -y \
-	icecast2 php nginx \
-	pulseaudio supervisor \
-	libmp3lame-dev mpg321
+    apt install -y \
+    icecast2 php nginx \
+    supervisor \
+    libvorbis-dev sox libsox-fmt-mp3 \
+    x42-plugins calf-plugins liblilv-dev
 
 COPY --from=build /bin/ninjam-chatbot /usr/bin/ninjam-chatbot
 COPY --from=build /bin/ninjam-dj-bot /usr/bin/ninjam-dj-bot
+COPY --from=build /etc/lv2host.yaml /etc/lv2host.yaml
 COPY --from=build-ninjamsrv /ninjam/ninjam/server/ninjamsrv /usr/bin/ninjamsrv
 COPY --from=build-ninjamsrv /ninjam/ninjam/server/ninjamsrv /usr/bin/ninjamsrv2
 COPY --from=build-ninjamsrv /ninjamcast/ninjam/ninjamcast/ninjamcast /usr/bin/ninjamcast
@@ -69,6 +84,7 @@ COPY --from=build-ninjamsrv /ninjamcast/ninjam/ninjamcast/ninjamcast /usr/bin/ni
 COPY --from=build-ninjamsrv /ninjam/ninjam/cursesclient/cninjam /usr/bin/cninjam
 
 COPY ./rc.local /etc/rc.local
+COPY ./default.conf /etc/nginx/sites-available/default.conf
 COPY cninjam.conf /etc/supervisor/conf.d/cninjam.conf
 
 RUN mkdir /var/log/ninjam
@@ -79,4 +95,4 @@ RUN sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2
 ENTRYPOINT /etc/rc.local
 
 # expose HTTP
-EXPOSE 80 2050 2051 8000
+EXPOSE 80 2050 2051 443

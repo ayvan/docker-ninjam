@@ -1,7 +1,7 @@
 <?php
 header ("Content-Type:text/xml");
     $ch = curl_init();
-    $xml_url='http://guitar-jam.ru:8000/status3.xsl';
+    $xml_url='http://localhost:8000/status3.xsl';
 
     curl_setopt($ch, CURLOPT_URL, $xml_url);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);

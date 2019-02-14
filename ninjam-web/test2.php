@@ -2,7 +2,7 @@
  
 $ch = curl_init();
  
-curl_setopt($ch, CURLOPT_URL, 'http://guitar-jam.ru/getxml.php');
+curl_setopt($ch, CURLOPT_URL, 'http://localhost/getxml.php');
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_TIMEOUT, 30);

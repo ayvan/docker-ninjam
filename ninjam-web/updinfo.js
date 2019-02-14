@@ -91,7 +91,7 @@ function xmlParse(){
 
     var xml=null;
     try {
-	xml=getXMLDocument('/getxml.php');
+	xml=getXMLDocument('/stream/status3.xsl');
         if(!xml) return;
     }
     catch(e){

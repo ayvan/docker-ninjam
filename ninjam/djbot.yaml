@@ -2,6 +2,10 @@ app_name: ninjam-dj-bot
 log_file: stdout
 log_level: debug
 daemon: false
+http_port: 8080
+db_file: /home/dj/tracks/tracks.db
+tracks_dir: /home/dj/tracks/
+lv2host_config: /etc/lv2host.yaml
 server:
   host: HOSTNAME
   port: 2051
