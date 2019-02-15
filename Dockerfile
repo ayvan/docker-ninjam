@@ -62,7 +62,7 @@ MAINTAINER Ivan Korostelev <ajvan.ivan@gmail.com>
 RUN apt update && \
     apt install -y \
     icecast2 php nginx \
-    libvorbis-dev sox libsox-fmt-mp3 \
+    libvorbis-dev sox libsox-fmt-mp3 bs1770gain \
     x42-plugins calf-plugins liblilv-dev
 
 COPY --from=build /bin/ninjam-chatbot /usr/bin/ninjam-chatbot
