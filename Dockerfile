@@ -35,9 +35,7 @@ RUN apt update && \
     libasound2 libasound2-dev \
     libvorbis-dev libvorbis0a \
     libvorbisenc2 libogg-dev \
-    libmp3lame-dev libjack-dev \
-    sox libsox-fmt-mp3 \
-    x42-plugins calf-plugins liblilv-dev
+    libmp3lame-dev libjack-dev
 
 WORKDIR /
 
@@ -45,12 +43,6 @@ WORKDIR /
 RUN git clone https://github.com/justinfrankel/ninjam
 
 WORKDIR /ninjam/ninjam/server
-
-# build ninjamsrv
-RUN make
-
-# build curses client
-WORKDIR /ninjam/ninjam/cursesclient
 
 # build ninjamsrv
 RUN make
@@ -70,7 +62,6 @@ MAINTAINER Ivan Korostelev <ajvan.ivan@gmail.com>
 RUN apt update && \
     apt install -y \
     icecast2 php nginx \
-    supervisor \
     libvorbis-dev sox libsox-fmt-mp3 \
     x42-plugins calf-plugins liblilv-dev
 
@@ -81,11 +72,9 @@ COPY --from=build-ninjamsrv /ninjam/ninjam/server/ninjamsrv /usr/bin/ninjamsrv
 COPY --from=build-ninjamsrv /ninjam/ninjam/server/ninjamsrv /usr/bin/ninjamsrv2
 COPY --from=build-ninjamsrv /ninjamcast/ninjam/ninjamcast/ninjamcast /usr/bin/ninjamcast
 COPY --from=build-ninjamsrv /ninjamcast/ninjam/ninjamcast/ninjamcast /usr/bin/ninjamcast2
-COPY --from=build-ninjamsrv /ninjam/ninjam/cursesclient/cninjam /usr/bin/cninjam
 
 COPY ./rc.local /etc/rc.local
 COPY ./default.conf /etc/nginx/sites-available/default.conf
-COPY cninjam.conf /etc/supervisor/conf.d/cninjam.conf
 
 RUN mkdir /var/log/ninjam
 RUN chmod +x /etc/rc.local && useradd dj && mkdir /home/dj && chown dj:dj /home/dj

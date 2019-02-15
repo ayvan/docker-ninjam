@@ -10,11 +10,8 @@ sleep 3
 
 su dj -c '/usr/bin/ninjam-dj-bot -c /etc/ninjam/djbot.yaml' > /var/log/ninjam/djbot.log 2>&1 &
 
-su dj -c 'pulseaudio --start -D'
-
 /usr/bin/ninjam-chatbot -c /etc/ninjam/chatbot.yaml > /var/log/ninjam/chatbot.log 2>&1 &
 
-service supervisor start
 service icecast2 start
 
 /usr/sbin/nginx -c /etc/nginx/nginx.conf
