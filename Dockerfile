@@ -68,8 +68,8 @@ RUN apt update && \
 
 RUN wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_9.5.1~kxstudio3_all.deb
 RUN wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb
-RUN dpkg -i kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb
 RUN dpkg -i kxstudio-repos_9.5.1~kxstudio3_all.deb
+RUN dpkg -i kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb
 
 RUN apt update && \
     apt install -y \
