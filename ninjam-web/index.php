@@ -10,8 +10,8 @@
     <meta name="keywords"
           content="форум, гитаристов, гитарный, профессионалы, любители, гитара, jam, джем, guitar, jam, онлайн, онлайн-джем, online-jam, guitar-jam, джем-сервер, сервер, jam-сервер, jam-server, ninjam, cockos, reaper, джемовать, импровизация, гаммы, пентатоника"/>
     <meta name='yandex-verification' content='6f6bb5fb3ec8a15c'/>
-    <link rel="icon" href="http://gitarizm.ru/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="http://gitarizm.ru/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="jplayer/dist/skin/blue.monday/css/jplayer.blue.monday.min.css" rel="stylesheet" type="text/css"/>

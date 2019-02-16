@@ -2,6 +2,7 @@ app_name: ninjam-dj-bot
 log_file: stdout
 log_level: debug
 daemon: false
+lang: en_GB
 http_port: 8080
 db_file: /home/dj/tracks/tracks.db
 tracks_dir: /home/dj/tracks/
