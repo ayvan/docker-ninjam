@@ -39,6 +39,7 @@ RUN apt update && \
 
 WORKDIR /
 
+
 # get ninjam sources
 RUN git clone https://github.com/justinfrankel/ninjam
 
@@ -62,8 +63,19 @@ MAINTAINER Ivan Korostelev <ajvan.ivan@gmail.com>
 RUN apt update && \
     apt install -y \
     icecast2 php nginx \
-    libvorbis-dev sox libsox-fmt-mp3 bs1770gain \
-    x42-plugins calf-plugins liblilv-dev
+    apt-transport-https software-properties-common wget \
+    libglibmm-2.4-1v5
+
+RUN wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_9.5.1~kxstudio3_all.deb
+RUN wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb
+RUN dpkg -i kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb
+RUN dpkg -i kxstudio-repos_9.5.1~kxstudio3_all.deb
+
+RUN apt update && \
+    apt install -y \
+    x42-plugins calf-plugins \
+    libvorbis-dev sox libsox-fmt-mp3 \
+    bs1770gain liblilv-dev
 
 COPY --from=build /bin/ninjam-chatbot /usr/bin/ninjam-chatbot
 COPY --from=build /bin/ninjam-dj-bot /usr/bin/ninjam-dj-bot
