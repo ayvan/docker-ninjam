@@ -61,3 +61,15 @@ Second: get CONTAINER ID from response above and insert to this command:
 ```bash
 $ docker exec -it f153d46ca7ce /bin/bash
 ```
+
+### How to enable HTTPS
+
+You can use Certbot:
+https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginx
+
+or get keys another way...
+
+When you got your keys, put fullchain.pem and privkey.pem to /etc/ninjam (see the configuration instructions above),
+delete default.conf and rename default.https.conf to default.conf, and then rebuild container. 
+ 
+The hostname specified when running hostname.sh must match the hostname in the SSL certificate!
