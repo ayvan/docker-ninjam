@@ -5,8 +5,12 @@ daemon: false
 lang: en_GB
 http_port: 8080
 db_file: /home/dj/tracks/tracks.db
+auth_db_file: /home/dj/tracks/users.db
 tracks_dir: /home/dj/tracks/
 lv2host_config: /etc/lv2host.yaml
+private_key_path: /etc/ninjam/private.pem
+public_key_path: /etc/ninjam/public.pem
+default_admin_password: ADMINPASSWORD
 server:
   host: HOSTNAME
   port: 2051

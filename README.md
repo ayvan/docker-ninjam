@@ -18,6 +18,16 @@ Set your server hostname:
 $ ./hostname.sh YOURSERVER.COM
 ```
 
+Generate RSA keys for JWT token authentication manually or run script:
+```bash
+$ ./jwt_rsa_keys.sh
+```
+
+Create user dj, and user home dir, and tracks dir:
+```
+useradd dj && mkdir /home/dj && chown dj:dj /home/dj && mkdir /home/dj/tracks && chown dj:dj /home/dj/tracks
+```
+
 Copy configs and web files (for example, you can use another path to configs, but you need to change it in start command too):
 ```bash
 $ sudo cp -R icecast2 /etc/icecast2
