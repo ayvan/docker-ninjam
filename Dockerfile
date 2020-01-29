@@ -57,12 +57,15 @@ COPY --from=build-ninjamsrv /ninjamcast/ninjam/ninjamcast/ninjamcast /usr/bin/ni
 COPY --from=build-ninjamsrv /ninjamcast/ninjam/ninjamcast/ninjamcast /usr/bin/ninjamcast2
 
 COPY ./rc.local /etc/rc.local
-COPY ./default.conf /etc/nginx/sites-available/default.conf
+COPY ./default.https.conf /etc/nginx/sites-available/default.conf
+COPY ./acme-challenge.conf /etc/nginx/acme-challenge.conf
+COPY ./utils/letsencrypt.sh /etc/cron.weekly/
 
 RUN apt update && \
     apt install -y \
         apt-transport-https software-properties-common \
-        libglibmm-2.4-1v5 && \
+        libglibmm-2.4-1v5 \
+        certbot && \
     curl -sL -o kxstudio-repos_9.5.1~kxstudio3_all.deb https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_9.5.1~kxstudio3_all.deb && \
     curl -sL -o kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb && \
     dpkg -i kxstudio-repos_9.5.1~kxstudio3_all.deb && \
