@@ -1,85 +1,56 @@
-FROM ayvan/ubuntu-golang AS build
-
-# Install tools required for project
-# Run `docker build --no-cache .` to update dependencies
-RUN apt update && apt install -y git make g++ \
-    libvorbis-dev \
-    sox libsox-fmt-mp3 \
-    x42-plugins calf-plugins liblilv-dev
-
-RUN mkdir $GOPATH/src
-RUN mkdir $GOPATH/src/github.com
-RUN mkdir $GOPATH/src/github.com/ayvan
-WORKDIR $GOPATH/src/github.com/ayvan/
-RUN git clone https://github.com/ayvan/ninjam-chatbot.git
-WORKDIR $GOPATH/src/github.com/ayvan/ninjam-chatbot
-RUN git checkout -b dev origin/dev
-RUN go get
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-s -w" -o /bin/ninjam-chatbot
-
-WORKDIR $GOPATH/src/github.com/ayvan/
-RUN git clone https://github.com/ayvan/ninjam-dj-bot.git
-WORKDIR $GOPATH/src/github.com/ayvan/ninjam-dj-bot
-RUN git checkout -b jam-player origin/jam-player
-RUN cp lv2host.yaml /etc/lv2host.yaml
-RUN go get
-RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-s -w" -o /bin/ninjam-dj-bot
-
-# build ninjamsrv
+# prepare build image
 FROM ubuntu:16.04 as build-ninjamsrv
 
 RUN apt update && \
-        apt install -y \
-    git make g++ \
-    lib32ncurses5 lib32ncurses5-dev \
-    libasound2 libasound2-dev \
-    libvorbis-dev libvorbis0a \
-    libvorbisenc2 libogg-dev \
-    libmp3lame-dev libjack-dev
+    apt install -y \
+        wget git make gcc g++ \
+        sox libsox-fmt-mp3 \
+        liblilv-dev \
+        lib32ncurses5 lib32ncurses5-dev \
+        libasound2 libasound2-dev \
+        libvorbis-dev libvorbis0a \
+        libvorbisenc2 libogg-dev \
+        libmp3lame-dev libjack-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN wget -P /tmp https://dl.google.com/go/go1.11.5.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf /tmp/go1.11.5.linux-amd64.tar.gz && \
+    rm /tmp/go1.11.5.linux-amd64.tar.gz
+
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
+
+# get sources and build go applications
+RUN go get github.com/ayvan/ninjam-chatbot github.com/ayvan/ninjam-dj-bot && \
+    cd $GOPATH/src/github.com/ayvan/ninjam-chatbot && \
+    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-s -w" -o /bin/ninjam-chatbot && \
+    cd $GOPATH/src/github.com/ayvan/ninjam-dj-bot && \
+    cp lv2host.yaml /etc/lv2host.yaml && \
+    CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-s -w" -o /bin/ninjam-dj-bot && \
+    cd $GOPATH/src/github.com/ayvan/ && \
+    rm -rf $GOPATH/src/
 
 WORKDIR /
 
+# get sources and build ninjam server and ninjamcast
+RUN git clone https://github.com/justinfrankel/ninjam && \
+    git clone https://github.com/ayvan/ninjamcast && \
+    # build ninjamsrv
+    cd /ninjam/ninjam/server && \
+    make && \
+    # build ninjamcast
+    cd /ninjamcast/ninjam/ninjamcast && \
+    make
 
-# get ninjam sources
-RUN git clone https://github.com/justinfrankel/ninjam
-
-WORKDIR /ninjam/ninjam/server
-
-# build ninjamsrv
-RUN make
-
-WORKDIR /
-
-RUN git clone https://github.com/ayvan/ninjamcast
-
-WORKDIR /ninjamcast/ninjam/ninjamcast
-
-RUN make
-
-# This results in a single layer image
+# prepare application server
 FROM justckr/ubuntu-nginx-php:latest
 MAINTAINER Ivan Korostelev <ajvan.ivan@gmail.com>
 
-RUN apt update && \
-    apt install -y \
-    icecast2 php nginx \
-    apt-transport-https software-properties-common wget \
-    libglibmm-2.4-1v5
-
-RUN wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_9.5.1~kxstudio3_all.deb
-RUN wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb
-RUN dpkg -i kxstudio-repos_9.5.1~kxstudio3_all.deb
-RUN dpkg -i kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb
-
-RUN apt update && \
-    apt install -y \
-    x42-plugins calf-plugins \
-    libvorbis-dev sox libsox-fmt-mp3 \
-    bs1770gain liblilv-dev
-
-COPY --from=build /bin/ninjam-chatbot /usr/bin/ninjam-chatbot
-COPY --from=build /bin/ninjam-dj-bot /usr/bin/ninjam-dj-bot
-COPY --from=build /etc/lv2host.yaml /etc/lv2host.yaml
+COPY --from=build-ninjamsrv /bin/ninjam-chatbot /usr/bin/ninjam-chatbot
+COPY --from=build-ninjamsrv /bin/ninjam-dj-bot /usr/bin/ninjam-dj-bot
+COPY --from=build-ninjamsrv /etc/lv2host.yaml /etc/lv2host.yaml
 COPY --from=build-ninjamsrv /ninjam/ninjam/server/ninjamsrv /usr/bin/ninjamsrv
 COPY --from=build-ninjamsrv /ninjam/ninjam/server/ninjamsrv /usr/bin/ninjamsrv2
 COPY --from=build-ninjamsrv /ninjamcast/ninjam/ninjamcast/ninjamcast /usr/bin/ninjamcast
@@ -88,10 +59,29 @@ COPY --from=build-ninjamsrv /ninjamcast/ninjam/ninjamcast/ninjamcast /usr/bin/ni
 COPY ./rc.local /etc/rc.local
 COPY ./default.conf /etc/nginx/sites-available/default.conf
 
-RUN mkdir /var/log/ninjam
-RUN chmod +x /etc/rc.local && useradd dj && mkdir /home/dj && chown dj:dj /home/dj
-RUN sed -i 's/daemon on/daemon off/g' /etc/nginx/nginx.conf
-RUN sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2
+RUN apt update && \
+    apt install -y \
+        apt-transport-https software-properties-common \
+        libglibmm-2.4-1v5 && \
+    curl -sL -o kxstudio-repos_9.5.1~kxstudio3_all.deb https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_9.5.1~kxstudio3_all.deb && \
+    curl -sL -o kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb && \
+    dpkg -i kxstudio-repos_9.5.1~kxstudio3_all.deb && \
+    dpkg -i kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb && \
+    apt update && \
+    apt install -y \
+        icecast2 \
+        x42-plugins calf-plugins \
+        libvorbis-dev sox libsox-fmt-mp3 \
+        bs1770gain liblilv-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    mkdir /var/log/ninjam && \
+    chmod +x /etc/rc.local && \
+    useradd dj && \
+    mkdir /home/dj && \
+    chown dj:dj /home/dj && \
+    sed -i 's/daemon on/daemon off/g' /etc/nginx/nginx.conf && \
+    sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2
 
 ENTRYPOINT /etc/rc.local
 
