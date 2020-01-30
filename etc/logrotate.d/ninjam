@@ -1,0 +1,14 @@
+/var/log/ninjam/*.log
+{
+    rotate 4
+    daily
+    missingok
+    notifempty
+    delaycompress
+    compress
+    sharedscripts
+    postrotate
+	supervisorctl restart ninjam:
+    endscript
+}
+gui

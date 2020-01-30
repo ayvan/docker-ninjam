@@ -56,16 +56,17 @@ COPY --from=build-ninjamsrv /ninjam/ninjam/server/ninjamsrv /usr/bin/ninjamsrv2
 COPY --from=build-ninjamsrv /ninjamcast/ninjam/ninjamcast/ninjamcast /usr/bin/ninjamcast
 COPY --from=build-ninjamsrv /ninjamcast/ninjam/ninjamcast/ninjamcast /usr/bin/ninjamcast2
 
-COPY ./rc.local /etc/rc.local
-COPY ./default.https.conf /etc/nginx/sites-available/default.conf
-COPY ./acme-challenge.conf /etc/nginx/acme-challenge.conf
-COPY ./utils/letsencrypt.sh /etc/cron.weekly/
+COPY ./etc/rc.local /etc/rc.local
+COPY ./etc/default.https.conf /etc/nginx/sites-available/default.conf
+COPY ./etc/acme-challenge.conf /etc/nginx/acme-challenge.conf
+COPY ./etc/ninjam-supervisor.conf /etc/supervisor/conf.d/ninjam.conf
+COPY ./etc/logrotate.d /etc/logrotate.d
 
 RUN apt update && \
     apt install -y \
         apt-transport-https software-properties-common \
         libglibmm-2.4-1v5 \
-        certbot && \
+        certbot logrotate && \
     curl -sL -o kxstudio-repos_9.5.1~kxstudio3_all.deb https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_9.5.1~kxstudio3_all.deb && \
     curl -sL -o kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb && \
     dpkg -i kxstudio-repos_9.5.1~kxstudio3_all.deb && \
@@ -84,7 +85,8 @@ RUN apt update && \
     mkdir /home/dj && \
     chown dj:dj /home/dj && \
     sed -i 's/daemon on/daemon off/g' /etc/nginx/nginx.conf && \
-    sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2
+    sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2 && \
+    ln -s /etc/ninjam/letsencrypt.sh /etc/cron.weekly/letsencrypt
 
 ENTRYPOINT /etc/rc.local
 
