@@ -76,6 +76,7 @@ RUN apt update && \
     ln -s /etc/ninjam/letsencrypt.sh /etc/cron.weekly/letsencrypt
 
 FROM ubuntu-server AS jamserver
+MAINTAINER Ivan Korostelev <ajvan.ivan@gmail.com>
 
 COPY --from=build-ninjambots /bin/ninjam-chatbot /usr/bin/ninjam-chatbot
 COPY --from=build-ninjambots /bin/ninjam-dj-bot /usr/bin/ninjam-dj-bot
