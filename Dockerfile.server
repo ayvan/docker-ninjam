@@ -1,0 +1,28 @@
+# prepare application server
+FROM justckr/ubuntu-nginx-php:latest AS ubuntu-server
+
+RUN apt update && \
+    apt install -y \
+        apt-transport-https software-properties-common \
+        libglibmm-2.4-1v5 \
+        certbot logrotate && \
+    curl -sL -o kxstudio-repos_9.5.1~kxstudio3_all.deb https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_9.5.1~kxstudio3_all.deb && \
+    curl -sL -o kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb && \
+    dpkg -i kxstudio-repos_9.5.1~kxstudio3_all.deb && \
+    dpkg -i kxstudio-repos-gcc5_9.5.1~kxstudio3_all.deb && \
+    apt update && \
+    apt install -y \
+        icecast2 \
+        x42-plugins calf-plugins \
+        libvorbis-dev sox libsox-fmt-mp3 \
+        bs1770gain liblilv-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    mkdir /var/log/ninjam && \
+    chmod +x /etc/rc.local && \
+    useradd dj && \
+    mkdir /home/dj && \
+    chown dj:dj /home/dj && \
+    sed -i 's/daemon on/daemon off/g' /etc/nginx/nginx.conf && \
+    sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2 && \
+    ln -s /etc/ninjam/letsencrypt.sh /etc/cron.weekly/letsencrypt
