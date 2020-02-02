@@ -1,5 +1,6 @@
 # prepare application server
 FROM justckr/ubuntu-nginx-php:latest AS ubuntu-server
+MAINTAINER Ivan Korostelev <ajvan.ivan@gmail.com>
 
 RUN apt update && \
     apt install -y \

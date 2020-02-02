@@ -12,7 +12,6 @@ RUN git clone https://github.com/justinfrankel/ninjam && \
     make
 
 FROM builder as build-ninjambots
-MAINTAINER Ivan Korostelev <ajvan.ivan@gmail.com>
 
 # get sources and build go applications
 RUN go get github.com/ayvan/ninjam-chatbot github.com/ayvan/ninjam-dj-bot && \

@@ -1,5 +1,6 @@
 # prepare build image
 FROM ubuntu:16.04 as builder
+MAINTAINER Ivan Korostelev <ajvan.ivan@gmail.com>
 
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
