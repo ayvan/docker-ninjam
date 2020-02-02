@@ -37,7 +37,6 @@ COPY --from=build-ninjamsrv /ninjamcast/ninjam/ninjamcast/ninjamcast /usr/bin/ni
 
 COPY ./etc/rc.local /etc/rc.local
 COPY ./etc/default.https.conf /etc/nginx/sites-available/default.conf
-COPY ./etc/acme-challenge.conf /etc/nginx/acme-challenge.conf
 COPY ./etc/ninjam-supervisor.conf /etc/supervisor/conf.d/ninjam.conf
 COPY ./etc/logrotate.d /etc/logrotate.d
 

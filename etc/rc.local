@@ -1,7 +1,6 @@
 #!/bin/sh -e
 
-
-
+# on the first container start we need to create SSL keys
 # TODO update if exists, but expired
 CERT1=/etc/ninjam/privkey.pem
 CERT2=/etc/ninjam/fullchain.pem
