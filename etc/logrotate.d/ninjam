@@ -8,6 +8,6 @@
     compress
     sharedscripts
     postrotate
-        supervisorctl restart ninjam:
+        supervisorctl -c /etc/supervisor/supervisord.conf restart ninjam:
     endscript
 }
