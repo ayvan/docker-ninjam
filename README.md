@@ -13,9 +13,9 @@ Generate new passwords:
 $ ./passwords.sh
 ```
 
-Set your server hostname:
+Set your server hostname and email for Let's Encrypt request:
 ```bash
-$ ./hostname.sh YOURSERVER.COM
+$ ./hostname.sh YOURSERVER.COM YOUR-EMAIL@SOMEMAIL.COM
 ```
 
 Generate RSA keys for JWT token authentication manually or run script:
