@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/usr/bin/docker run -t -a stdout --rm -p 80:80 -p 443:443 -p 2050:2050 -p 2051:2051 -p 8000:8000 -v /home/dj/tracks:/home/dj/tracks -v /etc/ninjam:/etc/ninjam -v /etc/icecast2:/etc/icecast2 -v /var/log/ninjam:/var/log/ninjam -v /var/www/ninjam-web:/app/src/public ninjam-server:latest
