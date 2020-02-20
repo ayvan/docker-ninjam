@@ -1,5 +1,31 @@
 # Dockerfile and configs for ninjam server
 
+What is NINJAM server? Please, read this first:
+
+https://www.reddit.com/r/Guitar/comments/butxrs/discussion_online_jamming_everything_you_ever/
+
+This set of configs, scripts and dockerfiles created to start you NINJAM server fast and easy.
+You can get VPS/VDS Linux server in Hetzner or another hosting provider, install Docker and start
+you NINJAM server in ~1 hour!
+
+## Other repos used in this project
+
+Chat bot for cross-chats communication (by default only between two ninjam servers):
+
+https://github.com/ayvan/ninjam-chatbot
+
+DJ bot for queue management and tracks management:
+
+https://github.com/ayvan/ninjam-dj-bot
+
+DJ bot can manage tracks and playlists: you can upload .mp3 tracks (guitar backing tracks) to DJ bot, and start it using
+DJ bot chat commands, for example "dj random", or "dj random Am" for random Am backing track. Also it supports playlists. 
+
+API documentation for DJ bot:
+
+https://github.com/ayvan/ninjam-dj-bot/tree/master/api
+
+
 ## How to start
 
 Get sources:
@@ -13,15 +39,19 @@ Generate new passwords:
 $ ./passwords.sh
 ```
 
+After generating, this script prints passwords to console. Please, save you passwords in secure place.
+
 Set your server hostname and email for Let's Encrypt request:
 ```bash
 $ ./hostname.sh YOURSERVER.COM YOUR-EMAIL@SOMEMAIL.COM
 ```
 
-Generate RSA keys for JWT token authentication manually or run script:
+Generate RSA keys for JWT token authentication (for DJ bot API) manually or run script:
 ```bash
 $ ./jwt_rsa_keys.sh
 ```
+
+RSA keys must be placed in /etc/ninjam directory and file names must be private.pem and public.pem
 
 Create user dj, and user home dir, and tracks dir:
 ```
@@ -35,14 +65,12 @@ $ sudo cp -R ninjam /etc/ninjam
 $ sudo cp -R ninjam-web /var/www/ninjam-web
 ```
 
+You can edit your configs and web files manually. For example, you can update HTML in index.php file
+(change favicon.ico, page logo or any text on page), add new users in ninjam2050.cfg and ninjam2051.cfg files etc. 
+
 Build docker container:
 ```bash
 $ ./build.sh
-```
-
-or
-```bash
-$ docker build -t ninjam-server .
 ```
 
 Start:
@@ -72,14 +100,6 @@ Second: get CONTAINER ID from response above and insert to this command:
 $ docker exec -it f153d46ca7ce /bin/bash
 ```
 
-### How to enable HTTPS
+### How to enable HTTPS?
 
-You can use Certbot:
-https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginx
-
-or get keys another way...
-
-When you got your keys, put fullchain.pem and privkey.pem to /etc/ninjam (see the configuration instructions above),
-delete default.conf and rename default.https.conf to default.conf, and then rebuild container. 
- 
-The hostname specified when running hostname.sh must match the hostname in the SSL certificate!
+HTTPS is automatically enabled. Just set your email and domain for Let's Encrypt by hostname.sh script, and it automatically generates certificate for HTTPS.
