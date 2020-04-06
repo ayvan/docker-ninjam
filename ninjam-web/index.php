@@ -164,7 +164,7 @@
 <script type="text/javascript" src="jplayer/dist/jplayer/jquery.jplayer.min.js"></script>
 <script type="text/javascript" src="jplayer/dist/add-on/jplayer.playlist.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="updinfo.js"></script>
+<script type="text/javascript" src="js/updinfo.js"></script>
 <script type="text/javascript">
     //<![CDATA[
     $(document).ready(function () {
