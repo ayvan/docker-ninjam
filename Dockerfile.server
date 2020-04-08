@@ -15,7 +15,7 @@ RUN apt update && \
     apt install -y \
         icecast2 \
         x42-plugins calf-plugins \
-        libvorbis-dev sox libsox-fmt-mp3 \
+        libvorbis-dev sox libsox-fmt-mp3 libsoxr-dev \
         bs1770gain liblilv-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \

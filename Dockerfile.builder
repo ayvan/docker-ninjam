@@ -9,7 +9,7 @@ RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 RUN apt update && \
     apt install -y \
         wget git make gcc g++ \
-        sox libsox-fmt-mp3 \
+        sox libsox-fmt-mp3 libsoxr-dev \
         liblilv-dev \
         lib32ncurses5 lib32ncurses5-dev \
         libasound2 libasound2-dev \
