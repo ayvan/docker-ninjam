@@ -27,4 +27,5 @@ RUN apt update && \
     sed -i 's/daemon on/daemon off/g' /etc/nginx/nginx.conf && \
     sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2 && \
     sed -i 's/su root syslog/su root adm/g' /etc/logrotate.conf && \
-    ln -s /etc/ninjam/letsencrypt.sh /etc/cron.weekly/letsencrypt
+    ln -s /etc/ninjam/letsencrypt.sh /etc/cron.weekly/letsencrypt && \
+    systemctl enable cron
