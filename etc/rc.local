@@ -5,7 +5,7 @@
 CERT1=/etc/ninjam/privkey.pem
 CERT2=/etc/ninjam/fullchain.pem
 if [[ ! -f "$CERT1" || ! -f "$CERT2" ]]; then
-    /etc/ninjam/letsencrypt-standalone.sh
+    /etc/ninjam/letsencrypt.sh
 fi
 
 service php7.0-fpm start
