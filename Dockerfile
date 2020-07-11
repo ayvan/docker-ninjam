@@ -19,6 +19,7 @@ RUN go get github.com/ayvan/ninjam-chatbot github.com/ayvan/ninjam-dj-bot && \
     CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-s -w" -o /bin/ninjam-chatbot && \
     cd $GOPATH/src/github.com/ayvan/ninjam-dj-bot && \
     cp lv2host.yaml /etc/lv2host.yaml && \
+    cp lv2speech.yaml /etc/lv2speech.yaml && \
     CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags "-s -w" -o /bin/ninjam-dj-bot && \
     cd $GOPATH/src/github.com/ayvan/ && \
     rm -rf $GOPATH/src/
@@ -29,6 +30,7 @@ MAINTAINER Ivan Korostelev <ajvan.ivan@gmail.com>
 COPY --from=build-ninjambots /bin/ninjam-chatbot /usr/bin/ninjam-chatbot
 COPY --from=build-ninjambots /bin/ninjam-dj-bot /usr/bin/ninjam-dj-bot
 COPY --from=build-ninjambots /etc/lv2host.yaml /etc/lv2host.yaml
+COPY --from=build-ninjambots /etc/lv2speech.yaml /etc/lv2speech.yaml
 COPY --from=build-ninjamsrv /ninjam/ninjam/server/ninjamsrv /usr/bin/ninjamsrv
 COPY --from=build-ninjamsrv /ninjam/ninjam/server/ninjamsrv /usr/bin/ninjamsrv2
 COPY --from=build-ninjamsrv /ninjamcast/ninjam/ninjamcast/ninjamcast /usr/bin/ninjamcast
