@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 # on the first container start we need to create SSL keys
 # TODO update if exists, but expired
