@@ -10,6 +10,7 @@ fi
 
 service php7.0-fpm start
 service supervisor start
+service cron start
 sleep 5
 service icecast2 start
 
